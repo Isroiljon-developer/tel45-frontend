@@ -45,16 +45,12 @@ function App() {
     useEffect(() => {
         if (!isLoggedIn) return;
 
-        // Check if we need to init 5000 rows
-        axios.post(`${API_URL}/init-tab`, { tab: activeTab })
-            .then(() => {
-                setItems([]);
-                setPage(0);
-                setHasMore(true);
-                fetchItems(0, true);
-                fetchStats();
-            })
-            .catch(err => console.error(err));
+        // Endi avtomatik 5000 qator qilinmaydi. Bor ma'lumot yuklanadi.
+        setItems([]);
+        setPage(0);
+        setHasMore(true);
+        fetchItems(0, true);
+        fetchStats();
     }, [activeTab, isLoggedIn]);
 
     // Search debounce
@@ -116,7 +112,7 @@ function App() {
         if (loading) return;
         setLoading(true);
         try {
-            const limit = 50;
+            const limit = 100; // 50 dan 100 ga oshirildi
             const offset = pageNum * limit;
             const res = await axios.get(`${API_URL}/items`, {
                 params: { tab: activeTab, limit, offset, search }
@@ -167,10 +163,7 @@ function App() {
             const responses = await Promise.all(promises);
             const newItems = responses.map(r => r.data);
 
-            // Yangi qatorlarni oxiriga qo'shish (User request: "oxiriga emas boshiga qo'shilyapti" -> Wait, user asked: "boshiga qo'shilyabdi oxiriga emas" -> means user wants it AT THE END.)
-            // So: prev first, then newItems. But note: infinite scroll appends to bottom. So if user adds new items, they appear at the END of the list.
-            // User might not see them immediately if they are on page 1 of 5000. 
-            // But requested is requested.
+            // Yangi qatorlar jadval oxiriga qo'shiladi
             setItems(prev => [...prev, ...newItems]);
             fetchStats();
         } catch (err) {
