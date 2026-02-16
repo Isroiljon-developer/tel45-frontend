@@ -66,6 +66,8 @@ function App() {
         return () => clearTimeout(delayDebounceFn);
     }, [search]);
 
+    const tableWrapperRef = useRef(null);
+
     // Infinite Scroll
     useEffect(() => {
         if (!isLoggedIn) return;
@@ -73,7 +75,10 @@ function App() {
             if (entries[0].isIntersecting && hasMore && !loading) {
                 setPage(prev => prev + 1);
             }
-        }, { threshold: 1.0 });
+        }, {
+            root: tableWrapperRef.current, // Skroll bo'ladigan konteynerni ko'rsatamiz
+            threshold: 0.1
+        });
 
         if (loaderRef.current) observer.observe(loaderRef.current);
         return () => observer.disconnect();
@@ -98,8 +103,6 @@ function App() {
             setIsLoggedIn(true);
             setLoginError('');
 
-            // Ma'lumotlarni yuklash (chunki endi token bor) - reload qilish shart emas, state o'zgarishi bilan useEffect ishlashi kerak
-            // Lekin ba'zan axios interceptor darhol ishga tushmasligi mumkin, shuning uchun page reload eng ishonchli
             window.location.reload();
 
         } catch (err) {
@@ -112,7 +115,7 @@ function App() {
         if (loading) return;
         setLoading(true);
         try {
-            const limit = 100; // 50 dan 100 ga oshirildi
+            const limit = 500; // 200 dan 500 ga oshirildi (birdaniga ko'p ko'rinishi uchun)
             const offset = pageNum * limit;
             const res = await axios.get(`${API_URL}/items`, {
                 params: { tab: activeTab, limit, offset, search }
@@ -237,6 +240,13 @@ function App() {
         );
     }
 
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('isLoggedIn');
+        setIsLoggedIn(false);
+        window.location.reload();
+    };
+
     // MAIN APP UI
     return (
         <div className="container">
@@ -265,8 +275,8 @@ function App() {
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                     />
-                    {/* O'zgartirildi: Add Items */}
                     <button className="primary" onClick={addItems}>+ Qator Qo'shish</button>
+                    <button className="logout-btn" onClick={handleLogout} style={{ marginLeft: '10px', background: '#fee2e2', border: 'none', padding: '8px', borderRadius: '6px', cursor: 'pointer' }}>🚪</button>
                 </div>
             </div>
 
@@ -295,7 +305,7 @@ function App() {
                 </div>
             </div>
 
-            <div className="table-wrapper">
+            <div className="table-wrapper" ref={tableWrapperRef}>
                 <table>
                     <thead>
                         <tr>

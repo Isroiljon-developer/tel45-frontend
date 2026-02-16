@@ -1,84 +1,4 @@
-/* Qolgan stillar ... */
-.total-count-badge {
-    background: #e0f2fe;
-    color: #0369a1;
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    white-space: nowrap;
-    display: flex;
-    align-items: center;
-    border: 1px solid #bae6fd;
-}
-
-/* Login Styles */
-.login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background: #f0f2f5;
-}
-
-/* ... qolgan stillar */
-.login-box {
-    background: white;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    width: 350px;
-}
-
-.login-box h2 {
-    margin-bottom: 20px;
-    text-align: center;
-    color: #333;
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 500;
-    color: #555;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 14px;
-}
-
-.login-btn {
-    width: 100%;
-    padding: 10px;
-    background: #2563eb;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 16px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.login-btn:hover {
-    background: #1d4ed8;
-}
-
-.error-msg {
-    color: red;
-    text-align: center;
-    margin-bottom: 10px;
-    font-size: 14px;
-}
-
-/* Asosiy stillar (davomi...) */
+/* Asosiy stillar */
 * {
     margin: 0;
     padding: 0;
@@ -91,13 +11,13 @@ body {
     padding: 20px;
 }
 
-/* ... qolgan stillar ... */
 .container {
     width: 100%;
     margin: 0;
     background: white;
-    padding: 10px;
-    /* border-radius va box-shadow olib tashlandi, chunki endi to'liq ekran */
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .header {
@@ -145,6 +65,18 @@ h1 {
 .controls {
     display: flex;
     gap: 12px;
+    align-items: center;
+}
+
+.total-count-badge {
+    background: #e0f2fe;
+    color: #0369a1;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    white-space: nowrap;
+    border: 1px solid #bae6fd;
 }
 
 input[type="text"],
@@ -153,7 +85,6 @@ input[type="number"] {
     padding: 8px 12px;
     border: 1px solid #d1d5db;
     border-radius: 6px;
-    width: 100%;
     font-size: 0.875rem;
 }
 
@@ -201,10 +132,11 @@ button.primary:hover {
 
 .table-wrapper {
     overflow-x: auto;
+    overflow-y: auto;
+    /* Vertikal skroll qo'shildi */
     border: 1px solid #e5e7eb;
     border-radius: 8px;
-    height: 70vh;
-    /* Fixed height for scroll */
+    height: 75vh;
 }
 
 table {
@@ -237,10 +169,6 @@ tr.sold {
     background-color: #fef2f2;
 }
 
-tr.sold:hover {
-    background-color: #fee2e2;
-}
-
 .profit-positive {
     color: #16a34a;
     font-weight: 600;
@@ -257,7 +185,6 @@ tr.sold:hover {
     border-radius: 4px;
     border: none;
     cursor: pointer;
-    font-size: 0.75rem;
 }
 
 .btn-danger {
@@ -268,4 +195,59 @@ tr.sold:hover {
 .btn-warning {
     background: #f59e0b;
     color: white;
+}
+
+/* Login Styles */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #f0f2f5;
+}
+
+.login-box {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 350px;
+}
+
+.login-box h2 {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+.login-btn {
+    width: 100%;
+    padding: 10px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.error-msg {
+    color: red;
+    text-align: center;
+    margin-bottom: 10px;
 }
