@@ -2,9 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import './index.css';
 
-const API_URL = window.location.hostname === 'localhost'
-    ? 'http://localhost:3001/api'
-    : 'https://tel45-backend.onrender.com/api';
+const API_URL = 'https://tel45-backend.onrender.com/api';
 
 // Axios interceptor - har bir so'rovga tokenni ulash
 axios.interceptors.request.use(config => {
