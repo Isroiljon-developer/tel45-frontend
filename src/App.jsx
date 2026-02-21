@@ -345,6 +345,7 @@ function App() {
                             <th>Xarid (so'm)</th>
                             <th>Sotilgan Sana</th>
                             <th>Sotuv (so'm)</th>
+                            <th>Kim IMEI</th>
                             <th>Foyda</th>
                             <th>Amallar</th>
                         </tr>
@@ -365,6 +366,7 @@ function App() {
                                     <td><input type="number" placeholder="0" value={item.purchase_price} onChange={e => updateItem(item.id, 'purchase_price', e.target.value)} /></td>
                                     <td><input type="text" placeholder="kk.oo.yyyy" value={item.sold_date} onChange={e => updateItem(item.id, 'sold_date', e.target.value)} /></td>
                                     <td><input type="number" placeholder="0" value={item.sale_price} onChange={e => updateItem(item.id, 'sale_price', e.target.value)} /></td>
+                                    <td><input type="text" placeholder="Ism familiya" value={item.kim_imei || ''} onChange={e => updateItem(item.id, 'kim_imei', e.target.value)} /></td>
                                     <td className={profit >= 0 ? 'profit-positive' : 'profit-negative'}>
                                         {isSold ? profit.toLocaleString() : '-'}
                                     </td>
