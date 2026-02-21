@@ -102,6 +102,38 @@ button.primary:hover {
     background: #1d4ed8;
 }
 
+.save-btn {
+    background: #10b981;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.save-btn.dirty {
+    opacity: 1;
+    background: #059669;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+    transform: scale(1.05);
+}
+
+.save-btn.dirty:hover {
+    background: #047857;
+}
+
+.save-btn:disabled {
+    filter: grayscale(0.5);
+}
+
 .summary {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -167,6 +199,11 @@ td {
 
 tr.sold {
     background-color: #fef2f2;
+}
+
+tr.changed {
+    border-left: 4px solid #10b981;
+    background-color: #f0fdf4;
 }
 
 .profit-positive {

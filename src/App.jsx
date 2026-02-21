@@ -2,7 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import './index.css';
 
-const API_URL = 'https://tel45-backend.onrender.com/api';
+const API_URL = window.location.hostname === 'localhost'
+    ? 'http://localhost:3001/api'
+    : 'https://tel45-backend.onrender.com/api';
 
 // Axios interceptor - har bir so'rovga tokenni ulash
 axios.interceptors.request.use(config => {
@@ -38,6 +40,8 @@ function App() {
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(0);
     const [hasMore, setHasMore] = useState(true);
+    const [hasChanges, setHasChanges] = useState(false);
+    const [changedIds, setChangedIds] = useState(new Set());
 
     const loaderRef = useRef(null);
 
@@ -177,16 +181,31 @@ function App() {
         }
     };
 
-    const updateItem = async (id, field, value) => {
+    const updateItem = (id, field, value) => {
         const newItems = items.map(item => item.id === id ? { ...item, [field]: value } : item);
         setItems(newItems);
+        setHasChanges(true);
+        setChangedIds(prev => new Set(prev).add(id));
+    };
 
+    const saveAll = async () => {
+        if (changedIds.size === 0) return;
+
+        setLoading(true);
         try {
-            await axios.put(`${API_URL}/items/${id}`, { [field]: value });
-            if (['purchase_price', 'sale_price', 'sold_date'].includes(field)) {
-                fetchStats();
-            }
-        } catch (err) { console.error(err); }
+            const itemsToSave = items.filter(item => changedIds.has(item.id));
+            await axios.post(`${API_URL}/items/bulk-update`, { items: itemsToSave });
+
+            setHasChanges(false);
+            setChangedIds(new Set());
+            alert("Barcha ma'lumotlar saqlandi!");
+            fetchStats();
+        } catch (err) {
+            console.error(err);
+            alert("Saqlashda xatolik yuz berdi!");
+        } finally {
+            setLoading(false);
+        }
     };
 
     const deleteItem = async (id) => {
@@ -254,13 +273,16 @@ function App() {
                 <h1>Phone CRM</h1>
 
                 <div className="tabs">
-                    {['yangi', 'koreyskiy'].map(tab => (
+                    {['yangi', 'koreskiy'].map(tab => (
                         <button
                             key={tab}
                             className={`tab-btn ${activeTab === tab ? 'active' : ''}`}
-                            onClick={() => setActiveTab(tab)}
+                            onClick={() => {
+                                if (hasChanges && !window.confirm("Saqlanmagan o'zgarishlar bor. Baribir o'tilsinmi?")) return;
+                                setActiveTab(tab);
+                            }}
                         >
-                            {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                            {tab === 'yangi' ? 'Yangi' : 'Koreskiy'}
                         </button>
                     ))}
                 </div>
@@ -275,7 +297,14 @@ function App() {
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                     />
-                    <button className="primary" onClick={addItems}>+ Qator Qo'shish</button>
+                    <button
+                        className={`save-btn ${hasChanges ? 'dirty' : ''}`}
+                        onClick={saveAll}
+                        disabled={!hasChanges || loading}
+                    >
+                        {loading ? 'Saqlanmoqda...' : '💾 Saqlash'}
+                    </button>
+                    <button className="primary" onClick={addItems} disabled={hasChanges}>+ Qator Qo'shish</button>
                     <button className="logout-btn" onClick={handleLogout} style={{ marginLeft: '10px', background: '#fee2e2', border: 'none', padding: '8px', borderRadius: '6px', cursor: 'pointer' }}>🚪</button>
                 </div>
             </div>
@@ -328,7 +357,7 @@ function App() {
                             const profit = (item.sale_price || 0) - (item.purchase_price || 0);
 
                             return (
-                                <tr key={item.id} className={isSold ? 'sold' : ''}>
+                                <tr key={item.id} className={`${isSold ? 'sold' : ''} ${changedIds.has(item.id) ? 'changed' : ''}`}>
                                     <td>{index + 1}</td>
                                     <td><input type="text" value={item.fio} onChange={e => updateItem(item.id, 'fio', e.target.value)} /></td>
                                     <td><input type="text" placeholder="kk.oo.yyyy" value={item.sana} onChange={e => updateItem(item.id, 'sana', e.target.value)} /></td>
